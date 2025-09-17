@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useForm, ValidationError } from '@formspree/react';
 
 const ContactForm = () => {
-  // Replace 'YOUR_FORM_ID' with the actual Formspree form ID
-  const [state, handleSubmit] = useForm("YOUR_FORM_ID");
   
   const [formData, setFormData] = useState({
     name: '',
@@ -21,14 +18,39 @@ const ContactForm = () => {
     });
   };
 
+  const [submitStatus, setSubmitStatus] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const onSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('');
     
-    // Submit to Formspree
-    await handleSubmit(e);
-    
-    // Reset form on successful submission
-    if (state.succeeded) {
+    try {
+      // Create mailto link with form data
+      const subject = `Contact Form Submission from ${formData.name}`;
+      const body = `
+Name: ${formData.name}
+Email: ${formData.email}
+Phone: ${formData.phone}
+Company: ${formData.company}
+
+Message:
+${formData.message}
+
+---
+This message was sent from the Rotax Engineering website contact form.
+      `.trim();
+      
+      const mailtoLink = `mailto:sales.rotaxengineering@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      
+      // Open default email client
+      window.location.href = mailtoLink;
+      
+      // Show success message
+      setSubmitStatus('success');
+      
+      // Reset form
       setFormData({
         name: '',
         email: '',
@@ -36,6 +58,11 @@ const ContactForm = () => {
         company: '',
         message: ''
       });
+      
+    } catch (error) {
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -132,34 +159,34 @@ const ContactForm = () => {
         <div>
           <button
             type="submit"
-            disabled={state.submitting}
+            disabled={isSubmitting}
             className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition-all duration-300 ${
-              state.submitting
+              isSubmitting
                 ? 'bg-gray-400 cursor-not-allowed'
                 : 'bg-gradient-to-r from-accent-orange to-accent-yellow hover:from-accent-orange-light hover:to-accent-yellow-light hover:shadow-lg'
             }`}
           >
-            {state.submitting ? 'Sending...' : 'Send Message'}
+            {isSubmitting ? 'Opening Email Client...' : 'Send Message'}
           </button>
         </div>
 
-        {state.succeeded && (
+        {submitStatus === 'success' && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-green-50 border border-green-200 rounded-lg p-4 text-green-800"
           >
-            Thank you! Your message has been sent successfully to sales.rotaxengineering@gmail.com. We'll get back to you soon.
+            Your email client should have opened with your message pre-filled. Please send the email to complete your inquiry. If it didn't open, you can contact us directly at sales.rotaxengineering@gmail.com
           </motion.div>
         )}
 
-        {state.errors.length > 0 && (
+        {submitStatus === 'error' && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800"
           >
-            Sorry, there was an error sending your message. Please try again or contact us directly at sales.rotaxengineering@gmail.com
+            Sorry, there was an error opening your email client. Please contact us directly at sales.rotaxengineering@gmail.com
           </motion.div>
         )}
       </form>
