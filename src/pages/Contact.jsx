@@ -17,7 +17,7 @@ const Contact = () => {
     },
     {
       title: 'Phone',
-      details: ['+264814884409', '+264816028923'],
+      details: ['+264814884499', '+264816028923'],
       icon: '📞'
     },
     {
@@ -165,7 +165,7 @@ const Contact = () => {
                 </p>
                 <div className="bg-white rounded-lg p-4 border border-orange-200">
                   <p className="font-semibold text-gray-800">Emergency Hotline:</p>
-                  <p className="text-xl font-bold text-orange-accent">+264 XX XXX XXXX</p>
+                  <p className="text-xl font-bold text-orange-accent">+264814884499</p>
                   <p className="text-sm text-gray-600 mt-2">Available 24/7 for urgent engineering support</p>
                 </div>
               </div>

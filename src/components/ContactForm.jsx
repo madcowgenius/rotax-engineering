@@ -120,7 +120,7 @@ This message was sent from the Rotax Engineering website contact form.
               value={formData.phone}
               onChange={handleChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-yellow focus:border-transparent transition-colors duration-200"
-              placeholder="+264 XX XXX XXXX"
+              placeholder="+264814884499"
             />
           </div>
 
